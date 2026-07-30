@@ -1,17 +1,21 @@
 import Navbar from "../components/layout/Navbar";
 import Hero from "../components/sections/Hero";
-import UploadBox from "../components/UploadBox";
+import Stats from "../components/sections/Stats";
+import TrustedBy from "../components/sections/TrustedBy";
+import Features from "../components/sections/Features";
+import HowItWorks from "../components/sections/HowItWorks";
 import Footer from "../components/layout/Footer";
 
-function Home() {
+export default function Home() {
   return (
-    <div className="min-h-screen bg-black text-white">
+    <main className="min-h-screen bg-[var(--bg)] text-white">
       <Navbar />
       <Hero />
-      <UploadBox />
+      <Stats />
+      <TrustedBy />
+      <Features />
+      <HowItWorks />
       <Footer />
-    </div>
+    </main>
   );
 }
-
-export default Home;
