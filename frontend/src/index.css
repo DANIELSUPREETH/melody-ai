@@ -1,9 +1,10 @@
 @import "tailwindcss";
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+/* Note: no "* { margin: 0; padding: 0 }" reset here. Tailwind already does
+   that, and an un-layered reset would override every p-*, m-* and mx-auto class. */
+
+html {
+  scroll-behavior: smooth;
 }
 
 html,

@@ -1,0 +1,21 @@
+{
+  "title": "Demo: C – G – Am – F (synthesized sample)",
+  "tempo": 117.5,
+  "key": "C major",
+  "duration": 16.0,
+  "chords": [
+    { "start": 0.0, "end": 4.04, "chord": "C" },
+    { "start": 4.04, "end": 8.034, "chord": "G" },
+    { "start": 8.034, "end": 12.028, "chord": "Am" },
+    { "start": 12.028, "end": 16.0, "chord": "F" }
+  ],
+  "stems": {
+    "vocals": "/demo/vocals.mp3",
+    "drums": "/demo/drums.mp3",
+    "bass": "/demo/bass.mp3",
+    "other": "/demo/other.mp3",
+    "instrumental": "/demo/instrumental.mp3"
+  },
+  "midi_url": "/demo/notes.mid",
+  "musicxml_url": "/demo/sheet.musicxml"
+}

@@ -1,0 +1,16 @@
+# CPU-only PyTorch wheels (much smaller than the CUDA ones)
+--extra-index-url https://download.pytorch.org/whl/cpu
+
+# Web API
+fastapi
+uvicorn[standard]
+python-multipart
+
+# Audio processing
+demucs==4.0.1        # stem separation (htdemucs model)
+librosa              # tempo, key, chords
+soundfile
+basic-pitch          # audio -> MIDI (Spotify)
+onnxruntime          # runs basic-pitch's ONNX model
+music21              # MIDI -> MusicXML
+numpy<2              # demucs/torch builds used here need numpy 1.x

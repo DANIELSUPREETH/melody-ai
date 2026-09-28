@@ -1,0 +1,11 @@
+# Netlify builds the React app in frontend/ and publishes frontend/dist
+[build]
+  base = "frontend"
+  command = "npm run build"
+  publish = "dist"
+
+# Single-page app: send every route (like /app?job=...) to index.html
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

@@ -1,15 +1,39 @@
-function Navbar() {
-  return (
-    <nav className="flex items-center justify-between px-10 py-6">
-      <h1 className="text-3xl font-bold text-cyan-400">
-        MelodyAI
-      </h1>
+import Button from "../ui/Button";
 
-      <button className="bg-cyan-500 px-5 py-2 rounded-lg hover:bg-cyan-600 transition">
-        Login
-      </button>
-    </nav>
+export default function Navbar() {
+  return (
+    <header className="fixed top-0 left-0 w-full z-50">
+
+      <div className="max-w-7xl mx-auto px-6">
+
+        <nav className="mt-5 rounded-full border border-white/10 bg-black/40 backdrop-blur-xl">
+
+          <div className="h-16 flex items-center justify-between px-5 sm:px-8">
+
+            <a href="/" className="text-xl font-bold">
+              Melody<span className="text-cyan-400">AI</span>
+            </a>
+
+            <div className="hidden md:flex gap-10 text-sm text-zinc-300">
+
+              <a href="/#features" className="hover:text-white transition">Features</a>
+              <a href="/#how-it-works" className="hover:text-white transition">How it Works</a>
+              <a href="/app?demo=1" className="hover:text-white transition">Demo</a>
+
+            </div>
+
+            <a href="/#upload">
+              <Button className="text-sm">
+                Get Started
+              </Button>
+            </a>
+
+          </div>
+
+        </nav>
+
+      </div>
+
+    </header>
   );
 }
-
-export default Navbar;

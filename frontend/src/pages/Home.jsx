@@ -1,5 +1,6 @@
 import Navbar from "../components/layout/Navbar";
 import Hero from "../components/sections/Hero";
+import UploadSection from "../components/sections/UploadSection";
 import Stats from "../components/sections/Stats";
 import TrustedBy from "../components/sections/TrustedBy";
 import Features from "../components/sections/Features";
@@ -11,6 +12,7 @@ export default function Home() {
     <main className="min-h-screen bg-[var(--bg)] text-white">
       <Navbar />
       <Hero />
+      <UploadSection />
       <Stats />
       <TrustedBy />
       <Features />

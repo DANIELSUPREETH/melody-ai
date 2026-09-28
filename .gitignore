@@ -1,0 +1,26 @@
+# Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# Backend job folders (uploaded songs + generated files)
+backend/jobs/
+
+# Secrets
+.env
+.env.*
+
+# Audio files, except the demo that ships with the site
+*.mp3
+*.wav
+*.flac
+!frontend/public/demo/*.mp3
+
+# Node / build output
+node_modules/
+frontend/dist/
+
+# OS / editor
+.DS_Store
+Thumbs.db
