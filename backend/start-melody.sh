@@ -50,24 +50,33 @@ fi
 
 # --- Run -----------------------------------------------------------------
 export PUBLIC_URL="https://$DOMAIN"
+# Own port, so other local apps on 8000 don't clash (override with PORT=...)
+PORT="${PORT:-8765}"
+if lsof -nP -iTCP:"$PORT" -sTCP:LISTEN >/dev/null 2>&1; then
+  die "Port $PORT is already in use by another app. Stop it, or run: PORT=8766 ./backend/start-melody.sh"
+fi
 cleanup() { kill "${API_PID:-}" "${NGROK_PID:-}" 2>/dev/null || true; }
 trap cleanup EXIT INT TERM
 
-say "Starting the API on port 8000..."
-.venv/bin/uvicorn app:app --host 127.0.0.1 --port 8000 &
+say "Starting the API on port $PORT..."
+.venv/bin/uvicorn app:app --host 127.0.0.1 --port "$PORT" &
 API_PID=$!
 
 for _ in $(seq 1 60); do
-  curl -s http://127.0.0.1:8000/ >/dev/null && break
+  curl -s "http://127.0.0.1:$PORT/" | grep -q '"ok"' && break
   sleep 1
 done
 
 say "Opening the tunnel at $PUBLIC_URL ..."
-ngrok http 8000 --url="$PUBLIC_URL" --log=stdout --log-level=warn &
+ngrok http "127.0.0.1:$PORT" --url="$PUBLIC_URL" --log=stdout --log-level=warn &
 NGROK_PID=$!
 
-sleep 4
-if curl -s -H "ngrok-skip-browser-warning: true" "$PUBLIC_URL/" | grep -q '"ok"'; then
+ok=""
+for _ in $(seq 1 15); do
+  if curl -s -H "ngrok-skip-browser-warning: true" "$PUBLIC_URL/" | grep -q '"ok"'; then ok=1; break; fi
+  sleep 2
+done
+if [ -n "$ok" ]; then
   say "MelodyAI is live: $PUBLIC_URL  (keep this window open, Ctrl+C to stop)"
 else
   say "The tunnel didn't answer yet. Check the messages above."
