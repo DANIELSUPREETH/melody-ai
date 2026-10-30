@@ -127,7 +127,9 @@ def result(job_id: str, request: Request):
         raise HTTPException(409, "This job is not finished yet.")
 
     r = job["result"]
-    base = str(request.base_url).rstrip("/")
+    # Behind a tunnel (ngrok/cloudflared) request.base_url can be localhost,
+    # so prefer the public URL when start-melody.sh sets it.
+    base = (os.environ.get("PUBLIC_URL") or str(request.base_url)).rstrip("/")
     file_url = lambda name: f"{base}/files/{job_id}/{name}"
     return {
         "tempo": r["tempo"],

@@ -1,8 +1,8 @@
 // Where the backend lives.
 // - Local dev: http://localhost:8000 (run `uvicorn app:app --reload --port 8000`)
-// - Production: your Hugging Face Space URL (update after deploying)
-// You can also override it with VITE_API_URL in a .env file.
-const PRODUCTION_API = "https://YOUR-HF-USERNAME-melodyai.hf.space";
+// - Production: set VITE_API_URL in Netlify (Site settings > Environment variables)
+//   to the backend's public URL, e.g. the ngrok domain from backend/start-melody.sh
+const PRODUCTION_API = "";
 
 const isLocal = ["localhost", "127.0.0.1"].includes(window.location.hostname);
 

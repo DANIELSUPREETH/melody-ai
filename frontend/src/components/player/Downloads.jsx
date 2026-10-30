@@ -20,7 +20,7 @@ export default function Downloads({ result }) {
           <a
             key={f.label}
             href={f.url}
-            download
+            download={`melodyai-${f.label.split(" ")[0].toLowerCase()}.${f.ext}`}
             className="flex items-center justify-between gap-2 px-4 py-3 rounded-xl border border-white/10 hover:border-cyan-400/60 transition text-sm"
           >
             <span>{f.label}</span>

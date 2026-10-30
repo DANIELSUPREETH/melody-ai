@@ -1,15 +1,23 @@
 import { API_BASE_URL } from "../config";
 
-// Free Hugging Face Spaces go to sleep when idle. The first request after that
-// can hang or fail for ~30s while the server boots, so we retry a few times.
+// The backend may be offline or still starting, so the first request can hang
+// or fail for a while. We retry a few times before giving up.
 const WAKE_TIMEOUT_MS = 10000;
 const WAKE_RETRIES = 6;
+
+// ngrok's free plan shows a "you are about to visit" page to browsers unless
+// this header is sent. It's harmless on any other host.
+const TUNNEL_HEADERS = { "ngrok-skip-browser-warning": "true" };
 
 async function fetchWithTimeout(url, options = {}, timeoutMs = WAKE_TIMEOUT_MS) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
-    return await fetch(url, { ...options, signal: controller.signal });
+    return await fetch(url, {
+      ...options,
+      headers: { ...TUNNEL_HEADERS, ...options.headers },
+      signal: controller.signal,
+    });
   } finally {
     clearTimeout(timer);
   }
@@ -30,6 +38,9 @@ async function errorMessage(res) {
  * doesn't respond so the UI can show "Waking up server...".
  */
 export async function wakeServer(onWaking) {
+  if (!API_BASE_URL) {
+    throw new Error("Live processing isn't set up on this site yet. Try the demo instead.");
+  }
   for (let attempt = 0; attempt < WAKE_RETRIES; attempt++) {
     try {
       const res = await fetchWithTimeout(`${API_BASE_URL}/`);
@@ -40,7 +51,9 @@ export async function wakeServer(onWaking) {
     if (attempt === 0 && onWaking) onWaking();
     await new Promise((r) => setTimeout(r, 5000));
   }
-  throw new Error("The server is not responding. Please try again in a minute.");
+  throw new Error(
+    "The processing server is offline right now. Please try again later, or open the demo."
+  );
 }
 
 /** Upload a file. onProgress(percent) reports upload progress. Returns job_id. */
@@ -52,6 +65,7 @@ export function uploadSong(file, onProgress) {
     form.append("file", file);
 
     xhr.open("POST", `${API_BASE_URL}/upload`);
+    for (const [k, v] of Object.entries(TUNNEL_HEADERS)) xhr.setRequestHeader(k, v);
     xhr.upload.onprogress = (e) => {
       if (e.lengthComputable && onProgress) onProgress(Math.round((e.loaded / e.total) * 100));
     };
@@ -76,10 +90,32 @@ export async function getStatus(jobId) {
   return res.json();
 }
 
+// Download one result file and return a local blob: URL for it.
+// <audio> tags and download links can't send TUNNEL_HEADERS, so we fetch
+// the files ourselves and hand them local URLs instead.
+async function toBlobUrl(url) {
+  const res = await fetch(url, { headers: TUNNEL_HEADERS });
+  if (!res.ok) throw new Error("Could not download the results. Please try again.");
+  return URL.createObjectURL(await res.blob());
+}
+
 export async function getResult(jobId) {
   const res = await fetchWithTimeout(`${API_BASE_URL}/result/${jobId}`);
   if (!res.ok) throw new Error(await errorMessage(res));
-  return res.json();
+  const result = await res.json();
+
+  const stemNames = Object.keys(result.stems);
+  const [stemUrls, midiUrl, xmlUrl] = await Promise.all([
+    Promise.all(stemNames.map((n) => toBlobUrl(result.stems[n]))),
+    toBlobUrl(result.midi_url),
+    toBlobUrl(result.musicxml_url),
+  ]);
+  return {
+    ...result,
+    stems: Object.fromEntries(stemNames.map((n, i) => [n, stemUrls[i]])),
+    midi_url: midiUrl,
+    musicxml_url: xmlUrl,
+  };
 }
 
 /** The demo result ships with the site, so it works even if the backend sleeps. */
