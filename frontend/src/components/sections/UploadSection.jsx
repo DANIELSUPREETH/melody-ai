@@ -36,7 +36,7 @@ export default function UploadSection() {
 
     try {
       setMessage("Connecting to server...");
-      await wakeServer(() => setMessage("Waking up server, this can take ~30s..."));
+      await wakeServer(() => setMessage("Connecting to the processing server..."));
 
       setMessage("Uploading...");
       // Upload counts as the first 5% of the bar

@@ -28,7 +28,7 @@ export default function Results() {
         if (isDemo) {
           setResult(await getDemoResult());
         } else if (jobId) {
-          await wakeServer(() => setMessage("Waking up server, this can take ~30s..."));
+          await wakeServer(() => setMessage("Connecting to the processing server..."));
           setResult(await getResult(jobId));
         } else {
           setError("No song selected. Upload a song or try the demo.");
