@@ -9,7 +9,9 @@ Upload a song (MP3/WAV/FLAC) and get:
 - **Sheet music** (MusicXML, rendered in the browser)
 - **Practice mode**: slow down without changing pitch, A-B loop, live chords
 
-Live site: https://melodymusic-ai.netlify.app (the demo always works; real uploads work while the backend is running)
+Live site: https://melodymusic-ai.netlify.app
+
+> **Status:** the backend isn't permanently hosted yet. The AI models need about 3 GB of RAM, more than any free host offers, so for now it runs on my laptop and is online only when I start it. Until it gets a permanent home, **use "Try Demo"** on the site to see the full player (stems, chords, sheet music, practice mode). Uploading your own song works whenever the backend is online.
 
 | Part     | Tech                                                      | Hosted on |
 | -------- | --------------------------------------------------------- | --------- |
